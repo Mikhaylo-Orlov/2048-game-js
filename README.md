@@ -3,6 +3,7 @@
   It`s  game is written in JS using functions, events, handlers, methods, adding and removing classes on elements
   
   We have some rules:
+    
     1) The game field is 4 x 4
     
     2) Each cell can be empty or contain one of the numbers: 2, 4, 8 ... 2^n
