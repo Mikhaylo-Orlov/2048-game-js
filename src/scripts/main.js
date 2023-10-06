@@ -68,13 +68,25 @@ function beginGame() {
 function hasEmptyTile() {
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < columns; c++) {
-      if (!board[r][c]) {
+      if (board[r][c] === 0) {
         return true;
       }
     }
   }
 
   return false;
+}
+
+function createArrayAllTiles() {
+  const array = [];
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < columns; c++) {
+      array.push(board[r][c]);
+    }
+  }
+
+  return array;
 }
 
 function setRandom() {
@@ -115,28 +127,24 @@ const handler = (e) => {
   switch (e.code) {
     case directionMove.left: {
       slideLeftRight(true);
-      setRandom();
 
       break;
     }
 
     case directionMove.right: {
       slideLeftRight(false);
-      setRandom();
 
       break;
     }
 
     case directionMove.up: {
       slideUpDown(true);
-      setRandom();
 
       break;
     }
 
     case directionMove.down: {
       slideUpDown(false);
-      setRandom();
 
       break;
     }
@@ -171,29 +179,41 @@ function slide(row) {
 }
 
 function slideLeftRight(left) {
-  for (let i = 0; i < rows; i++) {
-    let row = board[i];
+  const currentArray = createArrayAllTiles();
+  let newArray;
+
+  for (let r = 0; r < rows; r++) {
+    let row = board[r];
 
     if (left) {
       row = slide(row);
-      board[i] = row;
+      board[r] = row;
+      newArray = createArrayAllTiles();
     } else {
       row.reverse();
       row = slide(row);
       row.reverse();
-      board[i] = row;
+      board[r] = row;
+      newArray = createArrayAllTiles();
     }
 
     for (let c = 0; c < columns; c++) {
-      const tile = document.getElementById(`${i}${c}`);
-      const num = board[i][c];
+      const tile = document.getElementById(`${r}${c}`);
+      const num = board[r][c];
 
       updateTile(tile, num);
     }
   }
+
+  if (JSON.stringify(currentArray) !== JSON.stringify(newArray)) {
+    setRandom();
+  }
 }
 
 function slideUpDown(up) {
+  const currentArray = createArrayAllTiles();
+  let newArray;
+
   for (let c = 0; c < columns; c++) {
     let row = [
       board[0][c],
@@ -204,10 +224,12 @@ function slideUpDown(up) {
 
     if (up) {
       row = slide(row);
+      newArray = createArrayAllTiles();
     } else {
       row.reverse();
       row = slide(row);
       row.reverse();
+      newArray = createArrayAllTiles();
     }
 
     for (let r = 0; r < columns; r++) {
@@ -218,6 +240,10 @@ function slideUpDown(up) {
 
       updateTile(tile, number);
     }
+  }
+
+  if (JSON.stringify(currentArray) !== JSON.stringify(newArray)) {
+    setRandom();
   }
 };
 
